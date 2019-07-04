@@ -23,6 +23,10 @@ declare namespace SDK {
      * List all stations
      */
     listStations(req: ListStationsRequest): Promise<ListStationsResponse>;
+    /**
+     * Get station by id
+     */
+    getStation(req: GetStationRequest): Promise<GetStationResponse>;
   }
   export interface PileAPI {
     /**
@@ -40,28 +44,33 @@ declare namespace SDK {
      */
     getPileStatistics(req: GetPileStatisticsRequest): Promise<GetPileStatisticsResponse>;
     /**
-     * Get pile station statistics
+     * Get aggregation charge statistics
      */
-    getPileStationStatistics(
-      req: GetPileStationStatisticsRequest
-    ): Promise<GetPileStationStatisticsResponse>;
-    /**
-     * Get pile ns statistics
-     */
-    getPileNsStatistics(req: GetPileNsStatisticsRequest): Promise<GetPileNsStatisticsResponse>;
-    /**
-     * Get pile line statistics
-     */
-    getPileLineStatistics(
-      req: GetPileLineStatisticsRequest
-    ): Promise<GetPileLineStatisticsResponse>;
+    getChargeAggs(req: GetChargeAggsRequest): Promise<GetChargeAggsResponse>;
   }
+
+  type ListStationsRequest = {
+    query: {
+      limit?: number;
+      offset?: number;
+      sort?: string;
+      select?: number;
+    };
+  };
 
   type ListStationsResponse = {
     body: Array<Station>;
     headers: {
       xTotalCount: string;
     };
+  };
+
+  type GetStationRequest = {
+    stationId: string;
+  };
+
+  type GetStationResponse = {
+    body: Station;
   };
 
   type ListPilesRequest = {
@@ -116,8 +125,11 @@ declare namespace SDK {
     };
   };
 
-  type GetPileStationStatisticsRequest = {
+  type GetChargeAggsRequest = {
     query: {
+      select: string;
+      group: string;
+
       filter: {
         at: {
           $gt?: string;
@@ -127,44 +139,8 @@ declare namespace SDK {
     };
   };
 
-  type GetPileStationStatisticsResponse = {
-    body: Array<PileStationStatistics>;
-    headers: {
-      xTotalCount: string;
-    };
-  };
-
-  type GetPileNsStatisticsRequest = {
-    query: {
-      filter: {
-        at: {
-          $gt?: string;
-          $lt?: string;
-        };
-      };
-    };
-  };
-
-  type GetPileNsStatisticsResponse = {
-    body: Array<PileNsStatistics>;
-    headers: {
-      xTotalCount: string;
-    };
-  };
-
-  type GetPileLineStatisticsRequest = {
-    query: {
-      filter: {
-        at: {
-          $gt?: string;
-          $lt?: string;
-        };
-      };
-    };
-  };
-
-  type GetPileLineStatisticsResponse = {
-    body: Array<PileLineStatistics>;
+  type GetChargeAggsResponse = {
+    body: Array<ChargeAggs>;
     headers: {
       xTotalCount: string;
     };
@@ -228,29 +204,12 @@ declare namespace SDK {
     broken: number;
   };
 
-  type PileStationStatistics = {
+  type ChargeAggs = {
     at: string;
     station: string;
-    count: number;
-    amout: number;
-    lowAmout: number;
-    highAmout: number;
-    mediumAmout: number;
-  };
-
-  type PileNsStatistics = {
-    at: string;
-    ns: string;
-    amout: number;
-    lowAmout: number;
-    highAmout: number;
-    mediumAmout: number;
-  };
-
-  type PileLineStatistics = {
-    at: string;
     ns: string;
     line: string;
+    count: number;
     amout: number;
     lowAmout: number;
     highAmout: number;

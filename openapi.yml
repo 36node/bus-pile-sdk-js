@@ -17,6 +17,34 @@ paths:
       operationId: listStations
       tags:
         - station
+      parameters:
+        - name: _limit
+          in: query
+          description: How many items to return at one time
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _offset
+          in: query
+          description: How many items to escape
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: _sort
+          in: query
+          description: Fields to sort
+          required: false
+          schema:
+            type: string
+        - name: _select
+          in: query
+          description: Specifies which document fields to include or exclude
+          required: false
+          schema:
+            type: integer
       responses:
         "200":
           description: A paged array of stations
@@ -33,6 +61,32 @@ paths:
                   $ref: "#/components/schemas/Station"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /stations/{stationId}:
+    get:
+      summary: Get station by id
+      operationId: getStation
+      tags:
+        - station
+      parameters:
+        - name: stationId
+          in: path
+          required: true
+          description: The id of station
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The station with given id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Station"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalError"
 
@@ -188,7 +242,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
 
-  /pile/statistics:
+  /statistics:
     get:
       summary: Get pile statistics
       operationId: getPileStatistics
@@ -212,13 +266,25 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "500":
           $ref: "#/components/responses/InternalError"
-  /pile/statistics/station:
+  /chargeAggs:
     get:
-      summary: Get pile station statistics
-      operationId: getPileStationStatistics
+      summary: Get aggregation charge statistics
+      operationId: getChargeAggs
       tags:
         - statistics
       parameters:
+        - name: _group
+          in: query
+          description: 聚合维度
+          required: true
+          schema:
+            type: string
+        - name: _select
+          in: query
+          description: 返回字段
+          required: true
+          schema:
+            type: string
         - name: at_gt
           in: query
           description: 按大于日期查询 格式ISOString 或者 时间戳（秒）
@@ -244,81 +310,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/PileStationStatistics"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "500":
-          $ref: "#/components/responses/InternalError"
-  /pile/statistics/ns:
-    get:
-      summary: Get pile ns statistics
-      operationId: getPileNsStatistics
-      tags:
-        - statistics
-      parameters:
-        - name: at_gt
-          in: query
-          description: 按大于日期查询 格式ISOString 或者 时间戳（秒）
-          required: false
-          schema:
-            type: string
-        - name: at_lt
-          in: query
-          description: 按小于日期查询 格式ISOString 或者 时间戳（秒）
-          required: false
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Pile ns statistics
-          headers:
-            X-Total-Count:
-              description: Pile ns statistics
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PileNsStatistics"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "500":
-          $ref: "#/components/responses/InternalError"
-  /pile/statistics/line:
-    get:
-      summary: Get pile line statistics
-      operationId: getPileLineStatistics
-      tags:
-        - statistics
-      parameters:
-        - name: at_gt
-          in: query
-          description: 按大于日期查询 格式ISOString 或者 时间戳（秒）
-          required: false
-          schema:
-            type: string
-        - name: at_lt
-          in: query
-          description: 按小于日期查询 格式ISOString 或者 时间戳（秒）
-          required: false
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Pile line statistics
-          headers:
-            X-Total-Count:
-              description: Pile line statistics
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/PileLineStatistics"
+                  $ref: "#/components/schemas/ChargeAggs"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "500":
@@ -519,7 +511,7 @@ components:
         broken:
           type: number
           description: "故障中总数"
-    PileStationStatistics:
+    ChargeAggs:
       type: object
       properties:
         at:
@@ -529,56 +521,15 @@ components:
         station:
           type: string
           description: "充电站"
-        count:
-          type: number
-          description: "充电桩总数"
-        amout:
-          type: number
-          description: "充电量"
-        lowAmout:
-          type: number
-          description: "谷时充电量"
-        highAmout:
-          type: number
-          description: "峰时充电量"
-        mediumAmout:
-          type: number
-          description: "平时充电量"
-    PileNsStatistics:
-      type: object
-      properties:
-        at:
-          type: string
-          format: date
-          description: "日期"
-        ns:
-          type: string
-          description: "部门"
-        amout:
-          type: number
-          description: "充电量"
-        lowAmout:
-          type: number
-          description: "谷时充电量"
-        highAmout:
-          type: number
-          description: "峰时充电量"
-        mediumAmout:
-          type: number
-          description: "平时充电量"
-    PileLineStatistics:
-      type: object
-      properties:
-        at:
-          type: string
-          format: date
-          description: "日期"
         ns:
           type: string
           description: "部门"
         line:
           type: string
           description: "线路"
+        count:
+          type: number
+          description: "充电桩总数"
         amout:
           type: number
           description: "充电量"

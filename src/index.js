@@ -43,9 +43,26 @@ export default class SDK {
      * @returns {Promise<ListStationsResponse>} A paged array of stations
      */
     listStations: (req = {}) => {
-      const { headers } = req;
+      const { query, headers } = req;
 
       return fetch(`${this.base}/stations`, {
+        method: "get",
+        query: denormalize(query),
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
+    /**
+     * Get station by id
+     *
+     * @param {GetStationRequest} req getStation request
+     * @returns {Promise<GetStationResponse>} The station with given id
+     */
+    getStation: (req = {}) => {
+      const { stationId, headers } = req;
+
+      if (!stationId) throw new Error("stationId is required for getStation");
+
+      return fetch(`${this.base}/stations/${stationId}`, {
         method: "get",
         headers: { Authorization: this.auth, ...headers },
       });
@@ -100,51 +117,23 @@ export default class SDK {
     getPileStatistics: (req = {}) => {
       const { headers } = req;
 
-      return fetch(`${this.base}/pile/statistics`, {
+      return fetch(`${this.base}/statistics`, {
         method: "get",
         headers: { Authorization: this.auth, ...headers },
       });
     },
     /**
-     * Get pile station statistics
+     * Get aggregation charge statistics
      *
-     * @param {GetPileStationStatisticsRequest} req getPileStationStatistics request
-     * @returns {Promise<GetPileStationStatisticsResponse>} Pile station statistics
+     * @param {GetChargeAggsRequest} req getChargeAggs request
+     * @returns {Promise<GetChargeAggsResponse>} Pile station statistics
      */
-    getPileStationStatistics: (req = {}) => {
+    getChargeAggs: (req = {}) => {
       const { query, headers } = req;
 
-      return fetch(`${this.base}/pile/statistics/station`, {
-        method: "get",
-        query: denormalize(query),
-        headers: { Authorization: this.auth, ...headers },
-      });
-    },
-    /**
-     * Get pile ns statistics
-     *
-     * @param {GetPileNsStatisticsRequest} req getPileNsStatistics request
-     * @returns {Promise<GetPileNsStatisticsResponse>} Pile ns statistics
-     */
-    getPileNsStatistics: (req = {}) => {
-      const { query, headers } = req;
+      if (!query) throw new Error("query is required for statistics");
 
-      return fetch(`${this.base}/pile/statistics/ns`, {
-        method: "get",
-        query: denormalize(query),
-        headers: { Authorization: this.auth, ...headers },
-      });
-    },
-    /**
-     * Get pile line statistics
-     *
-     * @param {GetPileLineStatisticsRequest} req getPileLineStatistics request
-     * @returns {Promise<GetPileLineStatisticsResponse>} Pile line statistics
-     */
-    getPileLineStatistics: (req = {}) => {
-      const { query, headers } = req;
-
-      return fetch(`${this.base}/pile/statistics/line`, {
+      return fetch(`${this.base}/chargeAggs`, {
         method: "get",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
