@@ -7,7 +7,9 @@ declare class SDK {
   token: string;
   auth: string;
 
-  pet: SDK.PetAPI;
+  station: SDK.StationAPI;
+  pile: SDK.PileAPI;
+  statistics: SDK.StatisticsAPI;
 }
 
 declare namespace SDK {
@@ -16,47 +18,75 @@ declare namespace SDK {
     token?: string;
   }
 
-  export interface PetAPI {
+  export interface StationAPI {
     /**
-     * List all pets
+     * List all stations
      */
-    listPets(req: ListPetsRequest): Promise<ListPetsResponse>;
+    listStations(req: ListStationsRequest): Promise<ListStationsResponse>;
+  }
+  export interface PileAPI {
     /**
-     * Create a pet
+     * List all piles
      */
-    createPet(req: CreatePetRequest): Promise<CreatePetResponse>;
+    listPiles(req: ListPilesRequest): Promise<ListPilesResponse>;
     /**
-     * Find pet by id
+     * Get pile by id
      */
-    showPetById(req: ShowPetByIdRequest): Promise<ShowPetByIdResponse>;
+    getPile(req: GetPileRequest): Promise<GetPileResponse>;
+  }
+  export interface StatisticsAPI {
     /**
-     * Update pet
+     * Get pile statistics
      */
-    updatePet(req: UpdatePetRequest): Promise<UpdatePetResponse>;
+    getPileStatistics(req: GetPileStatisticsRequest): Promise<GetPileStatisticsResponse>;
     /**
-     *
+     * Get pile station statistics
      */
-    deletePet(req: DeletePetRequest): Promise<DeletePetResponse>;
+    getPileStationStatistics(
+      req: GetPileStationStatisticsRequest
+    ): Promise<GetPileStationStatisticsResponse>;
+    /**
+     * Get pile ns statistics
+     */
+    getPileNsStatistics(req: GetPileNsStatisticsRequest): Promise<GetPileNsStatisticsResponse>;
+    /**
+     * Get pile line statistics
+     */
+    getPileLineStatistics(
+      req: GetPileLineStatisticsRequest
+    ): Promise<GetPileLineStatisticsResponse>;
   }
 
-  type ListPetsRequest = {
+  type ListStationsResponse = {
+    body: Array<Station>;
+    headers: {
+      xTotalCount: string;
+    };
+  };
+
+  type ListPilesRequest = {
     query: {
       limit?: number;
       offset?: number;
       sort?: string;
-      select?: string;
-      group?: string;
+      select?: number;
 
       filter: {
-        tag?: string;
-        age: {
-          $gt?: number;
+        station?: string;
+        ns: {
+          $regex?: string;
         };
-        birthAt: {
+        line?: string;
+        pileNo?: string;
+        status?: string;
+        type?: string;
+        alertLevel?: string;
+        vehicleNo?: string;
+        startAt: {
           $gt?: string;
           $lt?: string;
         };
-        grade: {
+        endAt: {
           $gt?: string;
           $lt?: string;
         };
@@ -64,58 +94,163 @@ declare namespace SDK {
     };
   };
 
-  type ListPetsResponse = {
-    body: Array<Pet>;
+  type ListPilesResponse = {
+    body: Array<Pile>;
     headers: {
-      xTotalCount: number;
+      xTotalCount: string;
     };
   };
 
-  type CreatePetRequest = {
-    body: PetDoc;
+  type GetPileRequest = {
+    pileId: string;
   };
 
-  type CreatePetResponse = {
-    body: Pet;
+  type GetPileResponse = {
+    body: Pile;
   };
 
-  type ShowPetByIdRequest = {
-    petId: string;
+  type GetPileStatisticsResponse = {
+    body: Array<PileStatistics>;
+    headers: {
+      xTotalCount: string;
+    };
   };
 
-  type ShowPetByIdResponse = {
-    body: Pet;
+  type GetPileStationStatisticsRequest = {
+    query: {
+      filter: {
+        at: {
+          $gt?: string;
+          $lt?: string;
+        };
+      };
+    };
   };
 
-  type UpdatePetRequest = {
-    petId: string;
-    body: PetDoc;
+  type GetPileStationStatisticsResponse = {
+    body: Array<PileStationStatistics>;
+    headers: {
+      xTotalCount: string;
+    };
   };
 
-  type UpdatePetResponse = {
-    body: Pet;
+  type GetPileNsStatisticsRequest = {
+    query: {
+      filter: {
+        at: {
+          $gt?: string;
+          $lt?: string;
+        };
+      };
+    };
   };
 
-  type DeletePetRequest = {
-    petId: string;
+  type GetPileNsStatisticsResponse = {
+    body: Array<PileNsStatistics>;
+    headers: {
+      xTotalCount: string;
+    };
   };
 
-  type Pet = {
+  type GetPileLineStatisticsRequest = {
+    query: {
+      filter: {
+        at: {
+          $gt?: string;
+          $lt?: string;
+        };
+      };
+    };
+  };
+
+  type GetPileLineStatisticsResponse = {
+    body: Array<PileLineStatistics>;
+    headers: {
+      xTotalCount: string;
+    };
+  };
+
+  type Station = {
     id: string;
-    age: number;
+    createdAt: string;
+    updatedAt: string;
+    deleted: boolean;
+    deletedAt: string;
     name: string;
-    tag: string;
-    birthAt: string;
-    grade: number;
+    address: string;
+    power: string;
+    outPower: string;
+    usingCount: Number;
+    emptyCount: Number;
+    brokenCount: Number;
+    level3Count: Number;
+    level2Count: Number;
+    level1Count: Number;
+    chargingVehicles: Number;
+    chargingACVehicles: Number;
+    chargingDCVehicles: Number;
   };
 
-  type PetDoc = {
-    name: string;
-    tag: string;
-    age: number;
-    birthAt: string;
+  type Pile = {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    deleted: boolean;
+    deletedAt: string;
+    ns: Array<string>;
+    producer: string;
+    model: string;
+    startAt: string;
+    endAt: string;
+    pileNo: string;
+    station: string;
+    line: string;
+    vehicleNo: string;
+    alertLevel: string;
+    status: string;
+    type: string;
+    startSoc: string;
+    endSoc: string;
+    chargingAmount: string;
+    voltage: string;
+    current: string;
+    power: string;
+    duration: string;
+  };
+
+  type PileStatistics = {
+    using: number;
+    empty: number;
+    broken: number;
+  };
+
+  type PileStationStatistics = {
+    at: string;
+    station: string;
     count: number;
-    grade: number;
+    amout: number;
+    lowAmout: number;
+    highAmout: number;
+    mediumAmout: number;
+  };
+
+  type PileNsStatistics = {
+    at: string;
+    ns: string;
+    amout: number;
+    lowAmout: number;
+    highAmout: number;
+    mediumAmout: number;
+  };
+
+  type PileLineStatistics = {
+    at: string;
+    ns: string;
+    line: string;
+    amout: number;
+    lowAmout: number;
+    highAmout: number;
+    mediumAmout: number;
   };
 
   type Err = {

@@ -1,0 +1,608 @@
+openapi: "3.0.0"
+info:
+  version: 0.1.0
+  title: Bus Charging Pile Service
+  license:
+    name: MIT
+servers:
+  - url: https://api.36node.com{basePath}
+    description: The production API server
+    variables:
+      basePath:
+        default: /pile/v0
+paths:
+  /stations:
+    get:
+      summary: List all stations
+      operationId: listStations
+      tags:
+        - station
+      responses:
+        "200":
+          description: A paged array of stations
+          headers:
+            X-Total-Count:
+              description: Total count of all stations match the query
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Station"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /piles:
+    get:
+      summary: List all piles
+      operationId: listPiles
+      tags:
+        - pile
+      parameters:
+        - name: _limit
+          in: query
+          description: How many items to return at one time
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: _offset
+          in: query
+          description: How many items to escape
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: _sort
+          in: query
+          description: Fields to sort
+          required: false
+          schema:
+            type: string
+        - name: _select
+          in: query
+          description: Specifies which document fields to include or exclude
+          required: false
+          schema:
+            type: integer
+        - name: station
+          in: query
+          description: 根据充电站查询
+          required: false
+          schema:
+            type: string
+        - name: ns_like
+          in: query
+          description: 根据部门(namespace)查询
+          required: false
+          schema:
+            type: string
+        - name: line
+          in: query
+          description: 根据线路查询
+          required: false
+          schema:
+            type: string
+        - name: pileNo
+          in: query
+          description: 根据充电桩编号查询
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: 根据充电状态查询
+          required: false
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: 根据充电类型查询
+          required: false
+          schema:
+            type: string
+        - name: alertLevel
+          in: query
+          description: 根据车辆报警状态查询
+          required: false
+          schema:
+            type: string
+        - name: vehicleNo
+          in: query
+          description: 根据车辆自编号查询
+          required: false
+          schema:
+            type: string
+        - name: startAt_gt
+          in: query
+          description: 按大于充电开始时间查询 格式ISOString 或者 时间戳（秒）
+          required: false
+          schema:
+            type: string
+        - name: startAt_lt
+          in: query
+          description: 按小于充电开始时间查询 格式ISOString 或者 时间戳（秒）
+          required: false
+          schema:
+            type: string
+        - name: endAt_gt
+          in: query
+          description: 按大于充电结束时间查询 格式ISOString 或者 时间戳（秒）
+          required: false
+          schema:
+            type: string
+        - name: endAt_lt
+          in: query
+          description: 按小于充电结束时间查询 格式ISOString 或者 时间戳（秒）
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A paged array of piles
+          headers:
+            X-Total-Count:
+              description: Total count of all piles match the query
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pile"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /piles/{pileId}:
+    get:
+      summary: Get pile by id
+      operationId: getPile
+      tags:
+        - pile
+      parameters:
+        - name: pileId
+          in: path
+          required: true
+          description: The id of pile
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The pile with given id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pile"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /pile/statistics:
+    get:
+      summary: Get pile statistics
+      operationId: getPileStatistics
+      tags:
+        - statistics
+      responses:
+        "200":
+          description: Pile statistics
+          headers:
+            X-Total-Count:
+              description: Pile statistics
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PileStatistics"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /pile/statistics/station:
+    get:
+      summary: Get pile station statistics
+      operationId: getPileStationStatistics
+      tags:
+        - statistics
+      parameters:
+        - name: at_gt
+          in: query
+          description: 按大于日期查询 格式ISOString 或者 时间戳（秒）
+          required: false
+          schema:
+            type: string
+        - name: at_lt
+          in: query
+          description: 按小于日期查询 格式ISOString 或者 时间戳（秒）
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Pile station statistics
+          headers:
+            X-Total-Count:
+              description: Pile station statistics
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PileStationStatistics"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /pile/statistics/ns:
+    get:
+      summary: Get pile ns statistics
+      operationId: getPileNsStatistics
+      tags:
+        - statistics
+      parameters:
+        - name: at_gt
+          in: query
+          description: 按大于日期查询 格式ISOString 或者 时间戳（秒）
+          required: false
+          schema:
+            type: string
+        - name: at_lt
+          in: query
+          description: 按小于日期查询 格式ISOString 或者 时间戳（秒）
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Pile ns statistics
+          headers:
+            X-Total-Count:
+              description: Pile ns statistics
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PileNsStatistics"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /pile/statistics/line:
+    get:
+      summary: Get pile line statistics
+      operationId: getPileLineStatistics
+      tags:
+        - statistics
+      parameters:
+        - name: at_gt
+          in: query
+          description: 按大于日期查询 格式ISOString 或者 时间戳（秒）
+          required: false
+          schema:
+            type: string
+        - name: at_lt
+          in: query
+          description: 按小于日期查询 格式ISOString 或者 时间戳（秒）
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Pile line statistics
+          headers:
+            X-Total-Count:
+              description: Pile line statistics
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PileLineStatistics"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+security:
+  - bearerAuth: []
+
+components:
+  responses:
+    NoContent:
+      description: The resource was deleted successfully.
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Err"
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Err"
+    InternalError:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Err"
+  schemas:
+    Station:
+      type: object
+      properties:
+        # 基本字段
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date
+          description: "创建时间"
+        updatedAt:
+          type: string
+          format: date
+          description: "更新时间"
+        deleted:
+          type: boolean
+          default: false
+          description: "是否已经删除"
+        deletedAt:
+          type: string
+          format: date
+          description: "删除时间"
+        # 业务字段
+        name:
+          type: string
+          description: "充电站名称"
+        address:
+          type: string
+          description: "充电站地址"
+        power:
+          type: string
+          description: "额定总功率"
+        outPower:
+          type: string
+          description: "实际输出总功率"
+        usingCount:
+          type: Number
+          description: "使用中充电桩个数"
+        emptyCount:
+          type: Number
+          description: "空闲中充电桩个数"
+        brokenCount:
+          type: Number
+          description: "故障中充电桩个数"
+        level3Count:
+          type: Number
+          description: "三级报警车辆数"
+        level2Count:
+          type: Number
+          description: "二级报警车辆数"
+        level1Count:
+          type: Number
+          description: "一级报警车辆数"
+        chargingVehicles:
+          type: Number
+          description: "充电中车辆数"
+        chargingACVehicles:
+          type: Number
+          description: "快充车辆数"
+        chargingDCVehicles:
+          type: Number
+          description: "慢充车辆数"
+    Pile:
+      type: object
+      required:
+        - id
+        - pileNo
+        - station
+        - line
+        - ns
+      properties:
+        # 基本字段
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date
+          description: "创建时间"
+        updatedAt:
+          type: string
+          format: date
+          description: "更新时间"
+        deleted:
+          type: boolean
+          default: false
+          description: "是否已经删除"
+        deletedAt:
+          type: string
+          format: date
+          description: "删除时间"
+        ns:
+          type: array
+          description: "报警所属命名空间"
+          items:
+            type: string
+        # 业务字段
+        producer:
+          type: string
+          description: "厂家"
+        model:
+          type: string
+          description: "型号"
+        startAt:
+          type: string
+          format: date
+          description: "充电开始的时间"
+        endAt:
+          type: string
+          format: date
+          description: "充电结束的时间"
+        pileNo:
+          type: string
+          description: "充电桩编号"
+        station:
+          type: string
+          description: "充电站"
+        line:
+          type: string
+          description: "线路"
+        vehicleNo:
+          type: string
+          description: "车辆自编号"
+        alertLevel:
+          type: string
+          enum: ["1", "2", "3"]
+          description: "车辆报警状态"
+        status:
+          type: string
+          enum: ["USING", "EMPTY", "BROKEN"]
+          description: "充电状态"
+        type:
+          type: string
+          enum: ["DC", "AC"]
+          description: "充电类型"
+        startSoc:
+          type: string
+          description: "开始SoC"
+        endSoc:
+          type: string
+          description: "结束SoC"
+        chargingAmount:
+          type: string
+          description: "充电量"
+        voltage:
+          type: string
+          description: "输出电压"
+        current:
+          type: string
+          description: "输出电流"
+        power:
+          type: string
+          description: "输出功率"
+        duration:
+          type: string
+          description: "充电时长"
+    PileStatistics:
+      type: object
+      properties:
+        using:
+          type: number
+          description: "使用中总数"
+        empty:
+          type: number
+          description: "空闲中总数"
+        broken:
+          type: number
+          description: "故障中总数"
+    PileStationStatistics:
+      type: object
+      properties:
+        at:
+          type: string
+          format: date
+          description: "日期"
+        station:
+          type: string
+          description: "充电站"
+        count:
+          type: number
+          description: "充电桩总数"
+        amout:
+          type: number
+          description: "充电量"
+        lowAmout:
+          type: number
+          description: "谷时充电量"
+        highAmout:
+          type: number
+          description: "峰时充电量"
+        mediumAmout:
+          type: number
+          description: "平时充电量"
+    PileNsStatistics:
+      type: object
+      properties:
+        at:
+          type: string
+          format: date
+          description: "日期"
+        ns:
+          type: string
+          description: "部门"
+        amout:
+          type: number
+          description: "充电量"
+        lowAmout:
+          type: number
+          description: "谷时充电量"
+        highAmout:
+          type: number
+          description: "峰时充电量"
+        mediumAmout:
+          type: number
+          description: "平时充电量"
+    PileLineStatistics:
+      type: object
+      properties:
+        at:
+          type: string
+          format: date
+          description: "日期"
+        ns:
+          type: string
+          description: "部门"
+        line:
+          type: string
+          description: "线路"
+        amout:
+          type: number
+          description: "充电量"
+        lowAmout:
+          type: number
+          description: "谷时充电量"
+        highAmout:
+          type: number
+          description: "峰时充电量"
+        mediumAmout:
+          type: number
+          description: "平时充电量"
+
+    Err:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
