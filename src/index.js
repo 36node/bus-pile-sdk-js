@@ -33,88 +33,109 @@ export default class SDK {
   }
 
   /**
-   * pet's methods
+   * station's methods
    */
-  pet = {
+  station = {
     /**
-     * List all pets
+     * List all stations
      *
-     * @param {ListPetsRequest} req listPets request
-     * @returns {Promise<ListPetsResponse>} A paged array of pets
+     * @param {ListStationsRequest} req listStations request
+     * @returns {Promise<ListStationsResponse>} A paged array of stations
      */
-    listPets: (req = {}) => {
+    listStations: (req = {}) => {
       const { query, headers } = req;
 
-      return fetch(`${this.base}/pets`, {
+      return fetch(`${this.base}/stations`, {
         method: "get",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
     },
     /**
-     * Create a pet
+     * Get station by id
      *
-     * @param {CreatePetRequest} req createPet request
-     * @returns {Promise<CreatePetResponse>} The Pet created
+     * @param {GetStationRequest} req getStation request
+     * @returns {Promise<GetStationResponse>} The station with given id
      */
-    createPet: (req = {}) => {
-      const { headers, body } = req;
+    getStation: (req = {}) => {
+      const { stationId, headers } = req;
 
-      if (!body) throw new Error("requetBody is required for createPet");
+      if (!stationId) throw new Error("stationId is required for getStation");
 
-      return fetch(`${this.base}/pets`, {
-        method: "post",
-        body,
+      return fetch(`${this.base}/stations/${stationId}`, {
+        method: "get",
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
+  };
+  /**
+   * pile's methods
+   */
+  pile = {
+    /**
+     * List all piles
+     *
+     * @param {ListPilesRequest} req listPiles request
+     * @returns {Promise<ListPilesResponse>} A paged array of piles
+     */
+    listPiles: (req = {}) => {
+      const { query, headers } = req;
+
+      return fetch(`${this.base}/piles`, {
+        method: "get",
+        query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
     },
     /**
-     * Find pet by id
+     * Get pile by id
      *
-     * @param {ShowPetByIdRequest} req showPetById request
-     * @returns {Promise<ShowPetByIdResponse>} Expected response to a valid request
+     * @param {GetPileRequest} req getPile request
+     * @returns {Promise<GetPileResponse>} The pile with given id
      */
-    showPetById: (req = {}) => {
-      const { petId, headers } = req;
+    getPile: (req = {}) => {
+      const { pileId, headers } = req;
 
-      if (!petId) throw new Error("petId is required for showPetById");
+      if (!pileId) throw new Error("pileId is required for getPile");
 
-      return fetch(`${this.base}/pets/${petId}`, {
+      return fetch(`${this.base}/piles/${pileId}`, {
+        method: "get",
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
+  };
+  /**
+   * statistics's methods
+   */
+  statistics = {
+    /**
+     * Get pile statistics
+     *
+     * @param {GetPileStatisticsRequest} req getPileStatistics request
+     * @returns {Promise<GetPileStatisticsResponse>} Pile statistics
+     */
+    getPileStatistics: (req = {}) => {
+      const { headers } = req;
+
+      return fetch(`${this.base}/statistics`, {
         method: "get",
         headers: { Authorization: this.auth, ...headers },
       });
     },
     /**
-     * Update pet
+     * Get aggregation charge statistics
      *
-     * @param {UpdatePetRequest} req updatePet request
-     * @returns {Promise<UpdatePetResponse>} The pet
+     * @param {GetChargeAggsRequest} req getChargeAggs request
+     * @returns {Promise<GetChargeAggsResponse>} Pile station statistics
      */
-    updatePet: (req = {}) => {
-      const { petId, headers, body } = req;
+    getChargeAggs: (req = {}) => {
+      const { query, headers } = req;
 
-      if (!petId) throw new Error("petId is required for updatePet");
-      if (!body) throw new Error("requetBody is required for updatePet");
+      if (!query) throw new Error("query is required for statistics");
 
-      return fetch(`${this.base}/pets/${petId}`, {
-        method: "put",
-        body,
-        headers: { Authorization: this.auth, ...headers },
-      });
-    },
-    /**
-     *
-     *
-     * @param {DeletePetRequest} req deletePet request
-     * @returns {Promise<DeletePetResponse>} pet deleted
-     */
-    deletePet: (req = {}) => {
-      const { petId, headers } = req;
-
-      if (!petId) throw new Error("petId is required for deletePet");
-
-      return fetch(`${this.base}/pets/${petId}`, {
-        method: "delete",
+      return fetch(`${this.base}/chargeAggs`, {
+        method: "get",
+        query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
     },

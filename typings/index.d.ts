@@ -7,7 +7,9 @@ declare class SDK {
   token: string;
   auth: string;
 
-  pet: SDK.PetAPI;
+  station: SDK.StationAPI;
+  pile: SDK.PileAPI;
+  statistics: SDK.StatisticsAPI;
 }
 
 declare namespace SDK {
@@ -16,47 +18,84 @@ declare namespace SDK {
     token?: string;
   }
 
-  export interface PetAPI {
+  export interface StationAPI {
     /**
-     * List all pets
+     * List all stations
      */
-    listPets(req: ListPetsRequest): Promise<ListPetsResponse>;
+    listStations(req: ListStationsRequest): Promise<ListStationsResponse>;
     /**
-     * Create a pet
+     * Get station by id
      */
-    createPet(req: CreatePetRequest): Promise<CreatePetResponse>;
+    getStation(req: GetStationRequest): Promise<GetStationResponse>;
+  }
+  export interface PileAPI {
     /**
-     * Find pet by id
+     * List all piles
      */
-    showPetById(req: ShowPetByIdRequest): Promise<ShowPetByIdResponse>;
+    listPiles(req: ListPilesRequest): Promise<ListPilesResponse>;
     /**
-     * Update pet
+     * Get pile by id
      */
-    updatePet(req: UpdatePetRequest): Promise<UpdatePetResponse>;
+    getPile(req: GetPileRequest): Promise<GetPileResponse>;
+  }
+  export interface StatisticsAPI {
     /**
-     *
+     * Get pile statistics
      */
-    deletePet(req: DeletePetRequest): Promise<DeletePetResponse>;
+    getPileStatistics(req: GetPileStatisticsRequest): Promise<GetPileStatisticsResponse>;
+    /**
+     * Get aggregation charge statistics
+     */
+    getChargeAggs(req: GetChargeAggsRequest): Promise<GetChargeAggsResponse>;
   }
 
-  type ListPetsRequest = {
+  type ListStationsRequest = {
     query: {
       limit?: number;
       offset?: number;
       sort?: string;
-      select?: string;
-      group?: string;
+      select?: number;
+    };
+  };
+
+  type ListStationsResponse = {
+    body: Array<Station>;
+    headers: {
+      xTotalCount: string;
+    };
+  };
+
+  type GetStationRequest = {
+    stationId: string;
+  };
+
+  type GetStationResponse = {
+    body: Station;
+  };
+
+  type ListPilesRequest = {
+    query: {
+      limit?: number;
+      offset?: number;
+      sort?: string;
+      select?: number;
 
       filter: {
-        tag?: string;
-        age: {
-          $gt?: number;
+        station?: string;
+        ns: {
+          $regex?: string;
         };
-        birthAt: {
+        line?: string;
+        pileNo?: string;
+        status?: string;
+        type?: string;
+        alertLevel?: string;
+        vehicleNo?: string;
+        startAt: {
           $gt?: string;
           $lt?: string;
         };
-        grade: {
+        endAt: {
           $gt?: string;
           $lt?: string;
         };
@@ -64,58 +103,122 @@ declare namespace SDK {
     };
   };
 
-  type ListPetsResponse = {
-    body: Array<Pet>;
+  type ListPilesResponse = {
+    body: Array<Pile>;
     headers: {
-      xTotalCount: number;
+      xTotalCount: string;
     };
   };
 
-  type CreatePetRequest = {
-    body: PetDoc;
+  type GetPileRequest = {
+    pileId: string;
   };
 
-  type CreatePetResponse = {
-    body: Pet;
+  type GetPileResponse = {
+    body: Pile;
   };
 
-  type ShowPetByIdRequest = {
-    petId: string;
+  type GetPileStatisticsResponse = {
+    body: Array<PileStatistics>;
+    headers: {
+      xTotalCount: string;
+    };
   };
 
-  type ShowPetByIdResponse = {
-    body: Pet;
+  type GetChargeAggsRequest = {
+    query: {
+      select: string;
+      group: string;
+
+      filter: {
+        at: {
+          $gt?: string;
+          $lt?: string;
+        };
+      };
+    };
   };
 
-  type UpdatePetRequest = {
-    petId: string;
-    body: PetDoc;
+  type GetChargeAggsResponse = {
+    body: Array<ChargeAggs>;
+    headers: {
+      xTotalCount: string;
+    };
   };
 
-  type UpdatePetResponse = {
-    body: Pet;
-  };
-
-  type DeletePetRequest = {
-    petId: string;
-  };
-
-  type Pet = {
+  type Station = {
     id: string;
-    age: number;
+    createdAt: string;
+    updatedAt: string;
+    deleted: boolean;
+    deletedAt: string;
     name: string;
-    tag: string;
-    birthAt: string;
-    grade: number;
+    address: string;
+    location: {
+      lng: number;
+      lat: number;
+    };
+    power: string;
+    outPower: string;
+    usingCount: Number;
+    emptyCount: Number;
+    brokenCount: Number;
+    level3Count: Number;
+    level2Count: Number;
+    level1Count: Number;
+    chargingVehicles: Number;
+    chargingACVehicles: Number;
+    chargingDCVehicles: Number;
   };
 
-  type PetDoc = {
-    name: string;
-    tag: string;
-    age: number;
-    birthAt: string;
+  type Pile = {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    deleted: boolean;
+    deletedAt: string;
+    ns: Array<string>;
+    producer: string;
+    model: string;
+    startAt: string;
+    endAt: string;
+    pileNo: string;
+    station: string;
+    line: string;
+    vehicleNo: string;
+    alertLevel: string;
+    status: string;
+    type: string;
+    startSoc: string;
+    endSoc: string;
+    chargingAmount: string;
+    voltage: string;
+    current: string;
+    power: string;
+    duration: string;
+  };
+
+  type PileStatistics = {
+    using: number;
+    empty: number;
+    broken: number;
+  };
+
+  type ChargeAggs = {
+    at: string;
+    station: string;
+    ns: string;
+    line: string;
     count: number;
-    grade: number;
+    amout: number;
+    lowAmout: number;
+    highAmout: number;
+    mediumAmout: number;
+  };
+
+  type GeoLocation = {
+    lng: number;
+    lat: number;
   };
 
   type Err = {
