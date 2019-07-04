@@ -178,6 +178,10 @@ declare namespace SDK {
     deletedAt: string;
     name: string;
     address: string;
+    location: {
+      lng: number;
+      lat: number;
+    };
     power: string;
     outPower: string;
     usingCount: Number;
@@ -251,6 +255,11 @@ declare namespace SDK {
     lowAmout: number;
     highAmout: number;
     mediumAmout: number;
+  };
+
+  type GeoLocation = {
+    lng: number;
+    lat: number;
   };
 
   type Err = {

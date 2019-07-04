@@ -379,6 +379,8 @@ components:
         address:
           type: string
           description: "充电站地址"
+        location:
+          $ref: "#/components/schemas/GeoLocation"
         power:
           type: string
           description: "额定总功率"
@@ -589,6 +591,18 @@ components:
         mediumAmout:
           type: number
           description: "平时充电量"
+    GeoLocation:
+      type: object
+      description: "位置"
+      properties:
+        lng:
+          type: number
+          format: float
+          description: "经度"
+        lat:
+          type: number
+          format: float
+          description: "纬度"
 
     Err:
       type: object
