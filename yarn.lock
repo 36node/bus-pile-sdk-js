@@ -40,6 +40,16 @@
     json-server "^0.15.0"
     lodash "^4.17.11"
 
+"@36node/mock-server@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@36node/mock-server/-/mock-server-0.0.3.tgz#8aea91ddbb2be438b74f9534c9797d87d3eb40b1"
+  integrity sha512-nyjKXx9dgFii+wzTYGcyqN1vrkPUYsYBvW7LxHwb9O/WYZyKhuoLXFJriI2Cn6U7u710UDDLtHda1GznOW6j9g==
+  dependencies:
+    express "^4.17.0"
+    humps "^2.0.1"
+    json-server "^0.15.0"
+    lodash "^4.17.11"
+
 "@36node/query-normalizr@^0.4.4":
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/@36node/query-normalizr/-/query-normalizr-0.4.4.tgz#051c58d3bdd551850467ce49210934f8a6e7015f"
