@@ -1,5 +1,9 @@
-const generate = require("./pet");
-const _ = require("lodash");
+const generateStations = require("./stations");
+const generatePiles = require("./piles");
+const generateStatistics = require("./statistics");
+const generateChargeAggs = require("./chargeAggs");
+const faker = require("faker");
+const { NS } = require("./constants");
 
 const myRouter = (req, res, next) => {
   /** example */
@@ -9,7 +13,14 @@ const myRouter = (req, res, next) => {
   next();
 };
 
-const rewrites = { "/aaaaaaa*": "/bbbbbbb$1" };
+const generateRewrites = base => {
+  const rewrites = {};
+  rewrites[`${base}/stations*`] = "/stations$1";
+  rewrites[`${base}/piles*`] = "/piles$1";
+  rewrites[`${base}/statistics*`] = "/statistics$1";
+  rewrites[`${base}/chargeAggs*`] = "/chargeAggs$1";
+  return rewrites;
+};
 
 /**
  * mock
@@ -17,24 +28,32 @@ const rewrites = { "/aaaaaaa*": "/bbbbbbb$1" };
  * @param {object} opt mock options
  * @param {number} opt.count how many pets to be generated
  */
-const mock = ({ count = 100 }) => ({
+const mock = ({ base = "/pile/v0", count = 100 }) => ({
   /**
    * mock data
    */
   db: {
-    pets: generate(count),
+    stations: generateStations(10),
+    piles: generatePiles(count),
+    statistics: generateStatistics(count),
+    chargeAggs: generateChargeAggs(count),
   },
 
   /**
    * rewrite
    */
-  rewrites,
+  rewrites: generateRewrites(base),
 
   routers: [myRouter],
 
   aggregations: {
-    "/pets": {
-      grade: records => _.sumBy(records, "grade") / records.length,
+    "/chargeAggs": {
+      count: () => faker.random.number({ min: 100, max: 500 }),
+      amout: () => faker.random.number({ min: 30000, max: 50000 }),
+      lowAmout: () => faker.random.number({ min: 10000, max: 20000 }),
+      highAmout: () => faker.random.number({ min: 10000, max: 20000 }),
+      mediumAmout: () => faker.random.number({ min: 10000, max: 20000 }),
+      nsName: () => faker.random.arrayElement(NS),
     },
   },
 });

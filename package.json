@@ -1,6 +1,6 @@
 {
   "name": "@36node/bus-pile-sdk",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "SDK for bus charging pile service.",
   "repository": {
     "url": "36node/bus-pile-sdk",
@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "@36node/eslint-config": "^0.6.1",
-    "@36node/mock-server": "^0.0.1",
+    "@36node/mock-server": "^0.0.3",
     "@36node/sketch": "^0.12.0",
     "@36node/swagen": "^0.12.6",
     "@commitlint/cli": "^7.5.2",
