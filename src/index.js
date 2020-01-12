@@ -33,37 +33,81 @@ export default class SDK {
   }
 
   /**
-   * station's methods
+   * telaidian's methods
    */
-  station = {
+  telaidian = {
     /**
-     * List all stations
+     * Query token
      *
-     * @param {ListStationsRequest} req listStations request
-     * @returns {Promise<ListStationsResponse>} A paged array of stations
+     * @param {QueryTokenRequest} req queryToken request
+     * @returns {Promise<QueryTokenResponse>} The token created
      */
-    listStations: (req = {}) => {
+    queryToken: (req = {}) => {
+      const { headers, body } = req;
+
+      if (!body) throw new Error("requetBody is required for queryToken");
+
+      return fetch(`${this.base}/telaidian/query_token`, {
+        method: "post",
+        body,
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
+    /**
+     * Create a notification
+     *
+     * @param {CreateNotificationStationStatusRequest} req createNotificationStationStatus request
+     * @returns {Promise<CreateNotificationStationStatusResponse>} The Notification created
+     */
+    createNotificationStationStatus: (req = {}) => {
+      const { headers, body } = req;
+
+      if (!body)
+        throw new Error(
+          "requetBody is required for createNotificationStationStatus"
+        );
+
+      return fetch(`${this.base}/telaidian/notification_stationStatus`, {
+        method: "post",
+        body,
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
+  };
+  /**
+   * notification's methods
+   */
+  notification = {
+    /**
+     * List all notifications
+     *
+     * @param {ListNotificationsRequest} req listNotifications request
+     * @returns {Promise<ListNotificationsResponse>} A paged array of notifications
+     */
+    listNotifications: (req = {}) => {
       const { query, headers } = req;
 
-      return fetch(`${this.base}/stations`, {
+      return fetch(`${this.base}/notifications`, {
         method: "get",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
     },
     /**
-     * Get station by id
+     * Create a notification
      *
-     * @param {GetStationRequest} req getStation request
-     * @returns {Promise<GetStationResponse>} The station with given id
+     * @param {CreateNotificationRequest} req createNotification request
+     * @returns {Promise<CreateNotificationResponse>} The Notification created
      */
-    getStation: (req = {}) => {
-      const { stationId, headers } = req;
+    createNotification: (req = {}) => {
+      const { headers, body } = req;
 
-      if (!stationId) throw new Error("stationId is required for getStation");
+      if (!body)
+        throw new Error("requetBody is required for createNotification");
 
-      return fetch(`${this.base}/stations/${stationId}`, {
-        method: "get",
+      return fetch(`${this.base}/notifications`, {
+        method: "post",
+        body,
         headers: { Authorization: this.auth, ...headers },
       });
     },
@@ -87,53 +131,57 @@ export default class SDK {
         headers: { Authorization: this.auth, ...headers },
       });
     },
+  };
+  /**
+   * station's methods
+   */
+  station = {
     /**
-     * Get pile by id
+     * List all stations
      *
-     * @param {GetPileRequest} req getPile request
-     * @returns {Promise<GetPileResponse>} The pile with given id
+     * @param {ListStationsRequest} req listStations request
+     * @returns {Promise<ListStationsResponse>} A paged array of station
      */
-    getPile: (req = {}) => {
-      const { pileId, headers } = req;
+    listStations: (req = {}) => {
+      const { query, headers } = req;
 
-      if (!pileId) throw new Error("pileId is required for getPile");
+      return fetch(`${this.base}/stations`, {
+        method: "get",
+        query: denormalize(query),
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
+    /**
+     * Get station by station id
+     *
+     * @param {GetStationRequest} req getStation request
+     * @returns {Promise<GetStationResponse>} The station with given stationId
+     */
+    getStation: (req = {}) => {
+      const { stationId, headers } = req;
 
-      return fetch(`${this.base}/piles/${pileId}`, {
+      if (!stationId) throw new Error("stationId is required for getStation");
+
+      return fetch(`${this.base}/stations/${stationId}`, {
         method: "get",
         headers: { Authorization: this.auth, ...headers },
       });
     },
   };
   /**
-   * statistics's methods
+   * chargingOrder's methods
    */
-  statistics = {
+  chargingOrder = {
     /**
-     * Get pile statistics
+     * List all charging orders
      *
-     * @param {GetPileStatisticsRequest} req getPileStatistics request
-     * @returns {Promise<GetPileStatisticsResponse>} Pile statistics
+     * @param {ListChargingOrdersRequest} req listChargingOrders request
+     * @returns {Promise<ListChargingOrdersResponse>} A paged array of charging orders
      */
-    getPileStatistics: (req = {}) => {
-      const { headers } = req;
-
-      return fetch(`${this.base}/statistics`, {
-        method: "get",
-        headers: { Authorization: this.auth, ...headers },
-      });
-    },
-    /**
-     * Get aggregation charge statistics
-     *
-     * @param {GetChargeAggsRequest} req getChargeAggs request
-     * @returns {Promise<GetChargeAggsResponse>} Pile station statistics
-     */
-    getChargeAggs: (req = {}) => {
+    listChargingOrders: (req = {}) => {
       const { query, headers } = req;
 
-      if (!query) throw new Error("query is required for statistics");
-
-      return fetch(`${this.base}/chargeAggs`, {
+      return fetch(`${this.base}/charging-orders`, {
         method: "get",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },

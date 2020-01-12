@@ -7,9 +7,11 @@ declare class SDK {
   token: string;
   auth: string;
 
-  station: SDK.StationAPI;
+  telaidian: SDK.TelaidianAPI;
+  notification: SDK.NotificationAPI;
   pile: SDK.PileAPI;
-  statistics: SDK.StatisticsAPI;
+  station: SDK.StationAPI;
+  chargingOrder: SDK.ChargingOrderAPI;
 }
 
 declare namespace SDK {
@@ -18,50 +20,129 @@ declare namespace SDK {
     token?: string;
   }
 
-  export interface StationAPI {
+  export interface TelaidianAPI {
     /**
-     * List all stations
+     * Query token
      */
-    listStations(req: ListStationsRequest): Promise<ListStationsResponse>;
+    queryToken(req: QueryTokenRequest): Promise<QueryTokenResponse>;
     /**
-     * Get station by id
+     * Create a notification
      */
-    getStation(req: GetStationRequest): Promise<GetStationResponse>;
+    createNotificationStationStatus(
+      req: CreateNotificationStationStatusRequest
+    ): Promise<CreateNotificationStationStatusResponse>;
+  }
+  export interface NotificationAPI {
+    /**
+     * List all notifications
+     */
+    listNotifications(req: ListNotificationsRequest): Promise<ListNotificationsResponse>;
+    /**
+     * Create a notification
+     */
+    createNotification(req: CreateNotificationRequest): Promise<CreateNotificationResponse>;
   }
   export interface PileAPI {
     /**
      * List all piles
      */
     listPiles(req: ListPilesRequest): Promise<ListPilesResponse>;
-    /**
-     * Get pile by id
-     */
-    getPile(req: GetPileRequest): Promise<GetPileResponse>;
   }
-  export interface StatisticsAPI {
+  export interface StationAPI {
     /**
-     * Get pile statistics
+     * List all stations
      */
-    getPileStatistics(req: GetPileStatisticsRequest): Promise<GetPileStatisticsResponse>;
+    listStations(req: ListStationsRequest): Promise<ListStationsResponse>;
     /**
-     * Get aggregation charge statistics
+     * Get station by station id
      */
-    getChargeAggs(req: GetChargeAggsRequest): Promise<GetChargeAggsResponse>;
+    getStation(req: GetStationRequest): Promise<GetStationResponse>;
   }
+  export interface ChargingOrderAPI {
+    /**
+     * List all charging orders
+     */
+    listChargingOrders(req: ListChargingOrdersRequest): Promise<ListChargingOrdersResponse>;
+  }
+
+  type QueryTokenRequest = {
+    body: AnyObject;
+  };
+
+  type QueryTokenResponse = {
+    body: AnyObject;
+  };
+
+  type CreateNotificationStationStatusRequest = {
+    body: AnyObject;
+  };
+
+  type CreateNotificationStationStatusResponse = {
+    body: AnyObject;
+  };
+
+  type ListNotificationsRequest = {
+    query: {
+      limit?: number;
+      offset?: number;
+      sort?: string;
+      select?: string;
+    };
+  };
+
+  type ListNotificationsResponse = {
+    body: Array<Notification>;
+    headers: {
+      xTotalCount: number;
+    };
+  };
+
+  type CreateNotificationRequest = {
+    body: NotificationDoc;
+  };
+
+  type CreateNotificationResponse = {
+    body: AnyObject;
+  };
+
+  type ListPilesRequest = {
+    query: {
+      limit?: number;
+      offset?: number;
+      sort?: string;
+      populate?: string;
+      select?: string;
+
+      filter: {
+        status?: string;
+        equipmentModel?: string;
+        producer?: string;
+        type?: string;
+      };
+    };
+  };
+
+  type ListPilesResponse = {
+    body: Array<Pile>;
+    headers: {
+      xTotalCount: number;
+    };
+  };
 
   type ListStationsRequest = {
     query: {
       limit?: number;
       offset?: number;
       sort?: string;
-      select?: number;
+      populate?: string;
+      select?: string;
     };
   };
 
   type ListStationsResponse = {
     body: Array<Station>;
     headers: {
-      xTotalCount: string;
+      xTotalCount: number;
     };
   };
 
@@ -73,152 +154,38 @@ declare namespace SDK {
     body: Station;
   };
 
-  type ListPilesRequest = {
+  type ListChargingOrdersRequest = {
     query: {
       limit?: number;
       offset?: number;
       sort?: string;
-      select?: number;
+      populate?: string;
+      select?: string;
 
       filter: {
         station?: string;
-        ns: {
-          $regex?: string;
-        };
-        line?: string;
-        pileNo?: string;
-        status?: string;
-        type?: string;
-        alertLevel?: string;
-        vehicleNo?: string;
+        vehicle?: string;
+        driverName?: string;
         startAt: {
-          $gt?: string;
-          $lt?: string;
+          $lte?: string;
+          $gte?: string;
         };
-        endAt: {
-          $gt?: string;
-          $lt?: string;
-        };
+        ns?: string;
+        vehicleNo?: string;
+        pile?: string;
       };
     };
   };
 
-  type ListPilesResponse = {
-    body: Array<Pile>;
+  type ListChargingOrdersResponse = {
+    body: Array<ChargingOrder>;
     headers: {
-      xTotalCount: string;
+      xTotalCount: number;
     };
   };
 
-  type GetPileRequest = {
-    pileId: string;
-  };
-
-  type GetPileResponse = {
-    body: Pile;
-  };
-
-  type GetPileStatisticsResponse = {
-    body: Array<PileStatistics>;
-    headers: {
-      xTotalCount: string;
-    };
-  };
-
-  type GetChargeAggsRequest = {
-    query: {
-      select: string;
-      group: string;
-
-      filter: {
-        at: {
-          $gt?: string;
-          $lt?: string;
-        };
-      };
-    };
-  };
-
-  type GetChargeAggsResponse = {
-    body: Array<ChargeAggs>;
-    headers: {
-      xTotalCount: string;
-    };
-  };
-
-  type Station = {
+  type Notification = {
     id: string;
-    createdAt: string;
-    updatedAt: string;
-    deleted: boolean;
-    deletedAt: string;
-    name: string;
-    address: string;
-    location: {
-      lng: number;
-      lat: number;
-    };
-    power: string;
-    outPower: string;
-    usingCount: Number;
-    emptyCount: Number;
-    brokenCount: Number;
-    level3Count: Number;
-    level2Count: Number;
-    level1Count: Number;
-    chargingVehicles: Number;
-    chargingACVehicles: Number;
-    chargingDCVehicles: Number;
-  };
-
-  type Pile = {
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-    deleted: boolean;
-    deletedAt: string;
-    ns: Array<string>;
-    producer: string;
-    model: string;
-    startAt: string;
-    endAt: string;
-    pileNo: string;
-    station: string;
-    line: string;
-    vehicleNo: string;
-    alertLevel: string;
-    status: string;
-    type: string;
-    startSoc: string;
-    endSoc: string;
-    chargingAmount: string;
-    voltage: string;
-    current: string;
-    power: string;
-    duration: string;
-  };
-
-  type PileStatistics = {
-    using: number;
-    empty: number;
-    broken: number;
-  };
-
-  type ChargeAggs = {
-    at: string;
-    station: string;
-    ns: string;
-    line: string;
-    count: number;
-    amout: number;
-    lowAmout: number;
-    highAmout: number;
-    mediumAmout: number;
-  };
-
-  type GeoLocation = {
-    lng: number;
-    lat: number;
   };
 
   type Err = {
