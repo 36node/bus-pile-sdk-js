@@ -1,6 +1,6 @@
 {
   "name": "@36node/bus-pile-sdk",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "SDK for bus charging pile service.",
   "repository": {
     "url": "36node/bus-pile-sdk",
@@ -24,7 +24,7 @@
   "scripts": {
     "build": "sketch build",
     "format": "prettier --trailing-comma es5 --write 'src/**/*.js'",
-    "gen": "swagen sdk ./openapi.yml",
+    "gen": "swagen sdk ../bus-pile/openapi.yml",
     "lint": "sketch lint src",
     "release": "standard-version",
     "start": "bin/mock-server.js",
