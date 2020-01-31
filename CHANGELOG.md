@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/36node/bus-pile-sdk/compare/v0.0.5...v0.0.6) (2020-01-31)
+
+
+### Bug Fixes
+
+* auth ([48d8f1c](https://github.com/36node/bus-pile-sdk/commit/48d8f1c))
+
+
+
 ### [0.0.5](https://github.com/36node/bus-pile-sdk/compare/v0.0.4...v0.0.5) (2020-01-12)
 
 

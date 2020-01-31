@@ -1,6 +1,6 @@
 {
   "name": "@36node/bus-pile-sdk",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "SDK for bus charging pile service.",
   "repository": {
     "url": "36node/bus-pile-sdk",
