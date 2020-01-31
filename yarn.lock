@@ -58,6 +58,14 @@
     humps "^2.0.1"
     lodash "^4.17.11"
 
+"@36node/query-normalizr@^0.4.8":
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/@36node/query-normalizr/-/query-normalizr-0.4.8.tgz#481323d4d2d51f3c5fd014e975ee297c0020b856"
+  integrity sha512-hVoU5xHDtV+KaMM1hR7GHq/3TyD39sznB0KrpMqvmWsn+qdXFc4ql6tw0x98jxHGBvyWAhGjIV2KRAnZJq5u4g==
+  dependencies:
+    humps "^2.0.1"
+    lodash "^4.17.11"
+
 "@36node/sketch@^0.12.0":
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/@36node/sketch/-/sketch-0.12.0.tgz#a9edaddc457b664f3da902ce4fcb939266371c94"
@@ -96,19 +104,19 @@
     tmp "^0.0.33"
     webpack-filter-warnings-plugin "^1.2.1"
 
-"@36node/swagen@^0.12.6":
-  version "0.12.6"
-  resolved "https://registry.yarnpkg.com/@36node/swagen/-/swagen-0.12.6.tgz#b1982b84e7b1039eb7446919e8b4b7fbb1b406c1"
-  integrity sha512-7apVeOsJLnkJjXUAIpN5Zbe5DX16VHhqes5yWb2kJkwk3QL3gQXyDAjHqqSZGdsGBy7nn5pkXriYuqVwENSwJQ==
+"@36node/swagen@^0.13.8":
+  version "0.13.8"
+  resolved "https://registry.yarnpkg.com/@36node/swagen/-/swagen-0.13.8.tgz#f68563fe1c38e9f6a51653e867826c2a174cc93e"
+  integrity sha512-JrwjFQKltjpspU53m938LPPod2RHkPnQAsnw1dtPVYw6IRuRXyMw560wJua2vsIiqARqhyCkNNtF/bq6fexmvA==
   dependencies:
-    "@36node/query-normalizr" "^0.4.4"
+    "@36node/query-normalizr" "^0.4.8"
     handlebars "^4.0.12"
     handlebars-helpers "^0.10.0"
     js-yaml "^3.12.0"
     jsonfile "^5.0.0"
     lodash "^4.17.11"
     postman-collection "^3.3.0"
-    prettier "1.17.1"
+    prettier "^1.18.2"
     request "^2.88.0"
     require-directory "^2.1.1"
     swagger-parser "^6.0.1"
@@ -11105,6 +11113,11 @@ prettier@1.17.1:
   version "1.17.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.17.1.tgz#ed64b4e93e370cb8a25b9ef7fef3e4fd1c0995db"
   integrity sha512-TzGRNvuUSmPgwivDqkZ9tM/qTGW9hqDKWOE9YHiyQdixlKbv7kvEqsmDPrcHJTKwthU774TQwZXVtaQ/mMsvjg==
+
+prettier@^1.18.2:
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
+  integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
 
 pretty-bytes@^3.0.0:
   version "3.0.1"
