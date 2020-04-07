@@ -131,6 +131,22 @@ export default class SDK {
         headers: { Authorization: this.auth, ...headers },
       });
     },
+    /**
+     * Get pile by pile id
+     *
+     * @param {GetPileRequest} req getPile request
+     * @returns {Promise<GetPileResponse>} The pile with given pileId
+     */
+    getPile: (req = {}) => {
+      const { pileId, headers } = req;
+
+      if (!pileId) throw new Error("pileId is required for getPile");
+
+      return fetch(`${this.base}/piles/${pileId}`, {
+        method: "GET",
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
   };
   /**
    * station's methods

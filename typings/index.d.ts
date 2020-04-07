@@ -47,6 +47,10 @@ declare namespace SDK {
      * List all piles
      */
     listPiles(req: ListPilesRequest): Promise<ListPilesResponse>;
+    /**
+     * Get pile by pile id
+     */
+    getPile(req: GetPileRequest): Promise<GetPileResponse>;
   }
   export interface StationAPI {
     /**
@@ -127,6 +131,14 @@ declare namespace SDK {
     headers: {
       xTotalCount: number;
     };
+  };
+
+  type GetPileRequest = {
+    pileId: string;
+  };
+
+  type GetPileResponse = {
+    body: Pile;
   };
 
   type ListStationsRequest = {
