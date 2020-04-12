@@ -62,7 +62,10 @@ export default class SDK {
     createNotificationStationStatus: (req = {}) => {
       const { headers, body } = req;
 
-      if (!body) throw new Error("requetBody is required for createNotificationStationStatus");
+      if (!body)
+        throw new Error(
+          "requetBody is required for createNotificationStationStatus"
+        );
 
       return fetch(`${this.base}/telaidian/notification_stationStatus`, {
         method: "POST",
@@ -99,7 +102,8 @@ export default class SDK {
     createNotification: (req = {}) => {
       const { headers, body } = req;
 
-      if (!body) throw new Error("requetBody is required for createNotification");
+      if (!body)
+        throw new Error("requetBody is required for createNotification");
 
       return fetch(`${this.base}/notifications`, {
         method: "POST",
