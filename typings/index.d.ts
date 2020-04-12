@@ -12,6 +12,7 @@ declare class SDK {
   pile: SDK.PileAPI;
   station: SDK.StationAPI;
   chargingOrder: SDK.ChargingOrderAPI;
+  sgcc: SDK.SgccAPI;
 }
 
 declare namespace SDK {
@@ -68,6 +69,20 @@ declare namespace SDK {
      */
     listChargingOrders(req: ListChargingOrdersRequest): Promise<ListChargingOrdersResponse>;
   }
+  export interface SgccAPI {
+    /**
+     * List all sgcc records
+     */
+    listSgccRecords(req: ListSgccRecordsRequest): Promise<ListSgccRecordsResponse>;
+    /**
+     * Create a sgcc record
+     */
+    createSgccRecord(req: CreateSgccRecordRequest): Promise<CreateSgccRecordResponse>;
+    /**
+     * List all distinct field of sgcc data
+     */
+    listSgccField(req: ListSgccFieldRequest): Promise<ListSgccFieldResponse>;
+  }
 
   type QueryTokenRequest = {
     body: AnyObject;
@@ -95,7 +110,7 @@ declare namespace SDK {
   };
 
   type ListNotificationsResponse = {
-    body: [Notification];
+    body: Array<Notification>;
     headers: {
       xTotalCount: number;
     };
@@ -127,7 +142,7 @@ declare namespace SDK {
   };
 
   type ListPilesResponse = {
-    body: [Pile];
+    body: Array<Pile>;
     headers: {
       xTotalCount: number;
     };
@@ -152,7 +167,7 @@ declare namespace SDK {
   };
 
   type ListStationsResponse = {
-    body: [Station];
+    body: Array<Station>;
     headers: {
       xTotalCount: number;
     };
@@ -190,25 +205,72 @@ declare namespace SDK {
   };
 
   type ListChargingOrdersResponse = {
-    body: [ChargingOrder];
+    body: Array<ChargingOrder>;
     headers: {
       xTotalCount: number;
     };
   };
 
-  type NotificationDoc = {};
-  type AnyObject = {};
-  type Pile = {};
-  type Station = {};
-  type ChargingOrder = {};
+  type ListSgccRecordsRequest = {
+    query: {
+      limit?: number;
+      offset?: number;
+      sort?: string;
+      populate?: string;
+      select?: string;
+
+      filter: {
+        station?: string;
+        startAt: {
+          $lte?: string;
+          $gte?: string;
+        };
+        vehicleNo?: string;
+        department?: string;
+        period?: string;
+      };
+    };
+  };
+
+  type ListSgccRecordsResponse = {
+    body: Array<SgccRecord>;
+    headers: {
+      xTotalCount: number;
+    };
+  };
+
+  type CreateSgccRecordRequest = {
+    body: SgccRecord;
+  };
+
+  type CreateSgccRecordResponse = {
+    body: SgccRecord;
+  };
+
+  type ListSgccFieldRequest = {
+    query: {
+      limit?: number;
+      offset?: number;
+      sort?: string;
+      select?: string;
+
+      filter: {
+        name?: string;
+      };
+    };
+  };
+
+  type ListSgccFieldResponse = {
+    body: Array<SgccField>;
+    headers: {
+      xTotalCount: number;
+    };
+  };
+
   type Notification = {
     id: string;
   };
-  type NotificationOrDoc =
-    | {}
-    | {
-        id: string;
-      };
+
   type Err = {
     code: string;
     message: string;

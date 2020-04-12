@@ -13,9 +13,9 @@ export default class SDK {
    * @returns {string} auth header
    * */
   get auth() {
-    let token = this.token;
-    if (typeof token === "function") token = token();
-    if (token) return `Bearer ${token}`;
+    if (this.token) {
+      return `Bearer ${this.token}`;
+    }
 
     return "";
   }
@@ -48,7 +48,7 @@ export default class SDK {
       if (!body) throw new Error("requetBody is required for queryToken");
 
       return fetch(`${this.base}/telaidian/query_token`, {
-        method: "POST",
+        method: "post",
         body,
         headers: { Authorization: this.auth, ...headers },
       });
@@ -68,7 +68,7 @@ export default class SDK {
         );
 
       return fetch(`${this.base}/telaidian/notification_stationStatus`, {
-        method: "POST",
+        method: "post",
         body,
         headers: { Authorization: this.auth, ...headers },
       });
@@ -88,7 +88,7 @@ export default class SDK {
       const { query, headers } = req;
 
       return fetch(`${this.base}/notifications`, {
-        method: "GET",
+        method: "get",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
@@ -106,7 +106,7 @@ export default class SDK {
         throw new Error("requetBody is required for createNotification");
 
       return fetch(`${this.base}/notifications`, {
-        method: "POST",
+        method: "post",
         body,
         headers: { Authorization: this.auth, ...headers },
       });
@@ -126,7 +126,7 @@ export default class SDK {
       const { query, headers } = req;
 
       return fetch(`${this.base}/piles`, {
-        method: "GET",
+        method: "get",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
@@ -143,7 +143,7 @@ export default class SDK {
       if (!pileId) throw new Error("pileId is required for getPile");
 
       return fetch(`${this.base}/piles/${pileId}`, {
-        method: "GET",
+        method: "get",
         headers: { Authorization: this.auth, ...headers },
       });
     },
@@ -162,7 +162,7 @@ export default class SDK {
       const { query, headers } = req;
 
       return fetch(`${this.base}/stations`, {
-        method: "GET",
+        method: "get",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
@@ -179,7 +179,7 @@ export default class SDK {
       if (!stationId) throw new Error("stationId is required for getStation");
 
       return fetch(`${this.base}/stations/${stationId}`, {
-        method: "GET",
+        method: "get",
         headers: { Authorization: this.auth, ...headers },
       });
     },
@@ -198,7 +198,59 @@ export default class SDK {
       const { query, headers } = req;
 
       return fetch(`${this.base}/charging-orders`, {
-        method: "GET",
+        method: "get",
+        query: denormalize(query),
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
+  };
+  /**
+   * sgcc's methods
+   */
+  sgcc = {
+    /**
+     * List all sgcc records
+     *
+     * @param {ListSgccRecordsRequest} req listSgccRecords request
+     * @returns {Promise<ListSgccRecordsResponse>} A paged array of sgcc records
+     */
+    listSgccRecords: (req = {}) => {
+      const { query, headers } = req;
+
+      return fetch(`${this.base}/sgccRecord`, {
+        method: "get",
+        query: denormalize(query),
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
+    /**
+     * Create a sgcc record
+     *
+     * @param {CreateSgccRecordRequest} req createSgccRecord request
+     * @returns {Promise<CreateSgccRecordResponse>} The record created
+     */
+    createSgccRecord: (req = {}) => {
+      const { headers, body } = req;
+
+      if (!body) throw new Error("requetBody is required for createSgccRecord");
+
+      return fetch(`${this.base}/sgccRecord`, {
+        method: "post",
+        body,
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
+    /**
+     * List all distinct field of sgcc data
+     *
+     * @param {ListSgccFieldRequest} req listSgccField request
+     * @returns {Promise<ListSgccFieldResponse>} A paged array of sgcc fields
+     */
+    listSgccField: (req = {}) => {
+      const { query, headers } = req;
+
+      return fetch(`${this.base}/sgcc/field`, {
+        method: "get",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
