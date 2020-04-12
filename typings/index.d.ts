@@ -110,7 +110,7 @@ declare namespace SDK {
   };
 
   type ListNotificationsResponse = {
-    body: Array<Notification>;
+    body: [Notification];
     headers: {
       xTotalCount: number;
     };
@@ -142,7 +142,7 @@ declare namespace SDK {
   };
 
   type ListPilesResponse = {
-    body: Array<Pile>;
+    body: [Pile];
     headers: {
       xTotalCount: number;
     };
@@ -167,7 +167,7 @@ declare namespace SDK {
   };
 
   type ListStationsResponse = {
-    body: Array<Station>;
+    body: [Station];
     headers: {
       xTotalCount: number;
     };
@@ -205,7 +205,7 @@ declare namespace SDK {
   };
 
   type ListChargingOrdersResponse = {
-    body: Array<ChargingOrder>;
+    body: [ChargingOrder];
     headers: {
       xTotalCount: number;
     };
@@ -233,7 +233,7 @@ declare namespace SDK {
   };
 
   type ListSgccRecordsResponse = {
-    body: Array<SgccRecord>;
+    body: [SgccRecord];
     headers: {
       xTotalCount: number;
     };
@@ -261,16 +261,27 @@ declare namespace SDK {
   };
 
   type ListSgccFieldResponse = {
-    body: Array<SgccField>;
+    body: [SgccField];
     headers: {
       xTotalCount: number;
     };
   };
 
+  type NotificationDoc = {};
+  type AnyObject = {};
+  type Pile = {};
+  type Station = {};
+  type ChargingOrder = {};
+  type SgccRecord = Object;
+  type SgccField = Object;
   type Notification = {
     id: string;
   };
-
+  type NotificationOrDoc =
+    | {}
+    | {
+        id: string;
+      };
   type Err = {
     code: string;
     message: string;

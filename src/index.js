@@ -13,9 +13,9 @@ export default class SDK {
    * @returns {string} auth header
    * */
   get auth() {
-    if (this.token) {
-      return `Bearer ${this.token}`;
-    }
+    let token = this.token;
+    if (typeof token === "function") token = token();
+    if (token) return `Bearer ${token}`;
 
     return "";
   }
@@ -48,7 +48,7 @@ export default class SDK {
       if (!body) throw new Error("requetBody is required for queryToken");
 
       return fetch(`${this.base}/telaidian/query_token`, {
-        method: "post",
+        method: "POST",
         body,
         headers: { Authorization: this.auth, ...headers },
       });
@@ -62,13 +62,10 @@ export default class SDK {
     createNotificationStationStatus: (req = {}) => {
       const { headers, body } = req;
 
-      if (!body)
-        throw new Error(
-          "requetBody is required for createNotificationStationStatus"
-        );
+      if (!body) throw new Error("requetBody is required for createNotificationStationStatus");
 
       return fetch(`${this.base}/telaidian/notification_stationStatus`, {
-        method: "post",
+        method: "POST",
         body,
         headers: { Authorization: this.auth, ...headers },
       });
@@ -88,7 +85,7 @@ export default class SDK {
       const { query, headers } = req;
 
       return fetch(`${this.base}/notifications`, {
-        method: "get",
+        method: "GET",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
@@ -102,11 +99,10 @@ export default class SDK {
     createNotification: (req = {}) => {
       const { headers, body } = req;
 
-      if (!body)
-        throw new Error("requetBody is required for createNotification");
+      if (!body) throw new Error("requetBody is required for createNotification");
 
       return fetch(`${this.base}/notifications`, {
-        method: "post",
+        method: "POST",
         body,
         headers: { Authorization: this.auth, ...headers },
       });
@@ -126,7 +122,7 @@ export default class SDK {
       const { query, headers } = req;
 
       return fetch(`${this.base}/piles`, {
-        method: "get",
+        method: "GET",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
@@ -143,7 +139,7 @@ export default class SDK {
       if (!pileId) throw new Error("pileId is required for getPile");
 
       return fetch(`${this.base}/piles/${pileId}`, {
-        method: "get",
+        method: "GET",
         headers: { Authorization: this.auth, ...headers },
       });
     },
@@ -162,7 +158,7 @@ export default class SDK {
       const { query, headers } = req;
 
       return fetch(`${this.base}/stations`, {
-        method: "get",
+        method: "GET",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
@@ -179,7 +175,7 @@ export default class SDK {
       if (!stationId) throw new Error("stationId is required for getStation");
 
       return fetch(`${this.base}/stations/${stationId}`, {
-        method: "get",
+        method: "GET",
         headers: { Authorization: this.auth, ...headers },
       });
     },
@@ -198,7 +194,7 @@ export default class SDK {
       const { query, headers } = req;
 
       return fetch(`${this.base}/charging-orders`, {
-        method: "get",
+        method: "GET",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
@@ -218,7 +214,7 @@ export default class SDK {
       const { query, headers } = req;
 
       return fetch(`${this.base}/sgccRecord`, {
-        method: "get",
+        method: "GET",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
@@ -235,7 +231,7 @@ export default class SDK {
       if (!body) throw new Error("requetBody is required for createSgccRecord");
 
       return fetch(`${this.base}/sgccRecord`, {
-        method: "post",
+        method: "POST",
         body,
         headers: { Authorization: this.auth, ...headers },
       });
@@ -250,7 +246,7 @@ export default class SDK {
       const { query, headers } = req;
 
       return fetch(`${this.base}/sgcc/field`, {
-        method: "get",
+        method: "GET",
         query: denormalize(query),
         headers: { Authorization: this.auth, ...headers },
       });
