@@ -82,6 +82,10 @@ declare namespace SDK {
      * List all distinct field of sgcc data
      */
     listSgccField(req: ListSgccFieldRequest): Promise<ListSgccFieldResponse>;
+    /**
+     * Get sgcc summary
+     */
+    getSgccSummary(req: GetSgccSummaryRequest): Promise<GetSgccSummaryResponse>;
   }
 
   type QueryTokenRequest = {
@@ -267,6 +271,23 @@ declare namespace SDK {
     };
   };
 
+  type GetSgccSummaryRequest = {
+    query: {
+      group: [string];
+
+      filter: {
+        startAt: {
+          $lte?: string;
+          $gte?: string;
+        };
+      };
+    };
+  };
+
+  type GetSgccSummaryResponse = {
+    body: [SgccSummary];
+  };
+
   type NotificationDoc = {};
   type AnyObject = {};
   type Pile = {};
@@ -274,6 +295,7 @@ declare namespace SDK {
   type ChargingOrder = {};
   type SgccRecord = Object;
   type SgccField = Object;
+  type SgccSummary = Object;
   type Notification = {
     id: string;
   };

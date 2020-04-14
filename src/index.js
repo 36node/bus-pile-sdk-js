@@ -255,5 +255,22 @@ export default class SDK {
         headers: { Authorization: this.auth, ...headers },
       });
     },
+    /**
+     * Get sgcc summary
+     *
+     * @param {GetSgccSummaryRequest} req getSgccSummary request
+     * @returns {Promise<GetSgccSummaryResponse>} A paged array of sgcc summaries
+     */
+    getSgccSummary: (req = {}) => {
+      const { query, headers } = req;
+
+      if (!query) throw new Error("query is required for sgcc");
+
+      return fetch(`${this.base}/sgcc/summary`, {
+        method: "GET",
+        query: denormalize(query),
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
   };
 }
