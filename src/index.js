@@ -273,4 +273,44 @@ export default class SDK {
       });
     },
   };
+  /**
+   * price's methods
+   */
+  price = {
+    /**
+     * Get electricity price by rootNs
+     *
+     * @param {GetPriceRequest} req getPrice request
+     * @returns {Promise<GetPriceResponse>} The electricity price with given rootNs
+     */
+    getPrice: (req = {}) => {
+      const { query, headers } = req;
+
+      if (!query) throw new Error("query is required for price");
+
+      return fetch(`${this.base}/price`, {
+        method: "GET",
+        query: denormalize(query),
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
+    /**
+     * Update electricity price
+     *
+     * @param {UpdatePriceRequest} req updatePrice request
+     * @returns {Promise<UpdatePriceResponse>} The electricity price
+     */
+    updatePrice: (req = {}) => {
+      const { priceId, headers, body } = req;
+
+      if (!priceId) throw new Error("priceId is required for updatePrice");
+      if (!body) throw new Error("requetBody is required for updatePrice");
+
+      return fetch(`${this.base}/price/${priceId}`, {
+        method: "PATCH",
+        body,
+        headers: { Authorization: this.auth, ...headers },
+      });
+    },
+  };
 }

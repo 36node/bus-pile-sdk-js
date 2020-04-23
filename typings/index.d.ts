@@ -13,6 +13,7 @@ declare class SDK {
   station: SDK.StationAPI;
   chargingOrder: SDK.ChargingOrderAPI;
   sgcc: SDK.SgccAPI;
+  price: SDK.PriceAPI;
 }
 
 declare namespace SDK {
@@ -86,6 +87,16 @@ declare namespace SDK {
      * Get sgcc summary
      */
     getSgccSummary(req: GetSgccSummaryRequest): Promise<GetSgccSummaryResponse>;
+  }
+  export interface PriceAPI {
+    /**
+     * Get electricity price by rootNs
+     */
+    getPrice(req: GetPriceRequest): Promise<GetPriceResponse>;
+    /**
+     * Update electricity price
+     */
+    updatePrice(req: UpdatePriceRequest): Promise<UpdatePriceResponse>;
   }
 
   type QueryTokenRequest = {
@@ -288,6 +299,27 @@ declare namespace SDK {
     body: [SgccSummary];
   };
 
+  type GetPriceRequest = {
+    query: {
+      filter: {
+        rootNs: string;
+      };
+    };
+  };
+
+  type GetPriceResponse = {
+    body: Price;
+  };
+
+  type UpdatePriceRequest = {
+    priceId: string;
+    body: PriceUpdateBody;
+  };
+
+  type UpdatePriceResponse = {
+    body: Price;
+  };
+
   type NotificationDoc = {};
   type AnyObject = {};
   type Pile = {};
@@ -304,6 +336,26 @@ declare namespace SDK {
     | {
         id: string;
       };
+  type Price = {
+    id: string;
+    rootNs: string;
+    summerPeakPrice: string;
+    summerValleyPrice: boolean;
+    summerFlatPrice: boolean;
+    otherPeakPrice: boolean;
+    otherValleyPrice: boolean;
+    otherFlatPrice: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
+  type PriceUpdateBody = {
+    summerPeakPrice: string;
+    summerValleyPrice: boolean;
+    summerFlatPrice: boolean;
+    otherPeakPrice: boolean;
+    otherValleyPrice: boolean;
+    otherFlatPrice: boolean;
+  };
   type Err = {
     code: string;
     message: string;
