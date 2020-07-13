@@ -67,7 +67,7 @@
     "lint-staged": "^8.1.5",
     "moment": "^2.24.0",
     "prettier": "1.17.1",
-    "standard-version": "^6.0.1"
+    "standard-version": "^8.0.1"
   },
   "gitHead": "aaa4b563ac8c44a05ed59d989e8af59f5ffbe3f3"
 }
